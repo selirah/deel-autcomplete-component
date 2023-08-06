@@ -10,7 +10,6 @@ export interface Country {
 }
 
 export interface CountryData {
-  id: number;
   name: string;
   official: string;
   cca2: string;
