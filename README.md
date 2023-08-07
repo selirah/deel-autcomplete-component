@@ -1,6 +1,23 @@
 ## Auto-complete Component with React Typescript
 
-The application uses the [Pokemon API](https://pokeapi.co/api/v2/pokemon?limit=100) to fetch the fist 100 Pokemon characters.
+The application uses the [Pokemon API](https://pokeapi.co/api/v2/pokemon?limit=100) to fetch the first 100 Pokemon characters.
+
+Filter can be done using any of the follwing example characters:
+
+- bulbasaur
+- ivysaur
+- venusaur
+- charmander
+- charmeleon
+- squirtle
+- voltorb
+- onix
+- gastly
+- shellder
+- haunter
+- magnemite
+- graveler
+- tentacool
 
 ## Available Scripts
 
