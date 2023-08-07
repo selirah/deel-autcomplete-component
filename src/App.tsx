@@ -29,7 +29,7 @@ function App() {
           data={characters}
           loading={isLoading}
           setSelectedItem={handleItemClick}
-          filterField="name"
+          filterKey="name"
         />
       </div>
       <p className="info">

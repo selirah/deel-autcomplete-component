@@ -14,7 +14,7 @@ type Props<T> = {
   data: T[];
   loading: boolean;
   setSelectedItem?: (item: T) => void;
-  filterField: keyof T;
+  filterKey: keyof T;
 };
 
 type HighlightSearchValueProps = {
@@ -43,7 +43,7 @@ const Autocomplete = <T extends object>({
   data,
   loading,
   setSelectedItem,
-  filterField
+  filterKey
 }: Props<T>) => {
   const [value, setValue] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -67,7 +67,7 @@ const Autocomplete = <T extends object>({
       setTimeout(() => {
         try {
           const filteredData = data.filter((item: T) => {
-            const fieldValue = item[filterField] as string;
+            const fieldValue = item[filterKey] as string;
             return fieldValue.toLowerCase().includes(filterValue.toLowerCase());
           });
           resolve(filteredData);
@@ -134,7 +134,7 @@ const Autocomplete = <T extends object>({
     } else if (e.key === "Enter" && value !== "") {
       // User pressed the Enter key
       setShowSuggestions(false);
-      setValue(suggestions[activeSuggestion][filterField]);
+      setValue(suggestions[activeSuggestion][filterKey]);
       setSelectedItem && setSelectedItem(suggestions[activeSuggestion]);
     } else {
       return;
@@ -146,7 +146,7 @@ const Autocomplete = <T extends object>({
   // and close the suggestion container
   const onSetSuggestion = (item: T) => {
     setShowSuggestions(false);
-    setValue(item[filterField]);
+    setValue(item[filterKey]);
     setSelectedItem && setSelectedItem(item);
   };
 
@@ -189,7 +189,7 @@ const Autocomplete = <T extends object>({
           {suggestions && suggestions.length ? (
             suggestions.map((suggestion) => (
               <li
-                key={suggestion[filterField]}
+                key={suggestion[filterKey]}
                 className={`filter-item ${
                   suggestions.indexOf(suggestion) === activeSuggestion
                     ? "active"
@@ -201,7 +201,7 @@ const Autocomplete = <T extends object>({
                 onClick={() => onSetSuggestion(suggestion)}
               >
                 <HighlightSearchValue
-                  value={suggestion[filterField]}
+                  value={suggestion[filterKey]}
                   searchValue={value}
                 />
               </li>
