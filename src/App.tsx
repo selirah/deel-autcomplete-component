@@ -2,47 +2,41 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import Autocomplete from "./components/Autocomplete";
 import useFetch from "./hooks/useFetch";
-import { Country, CountryData } from "./types/Country";
+import { Pokemon, PokemonCharacter } from "./types/Pokemon";
 
 function App() {
-  const { data, isLoading, error } = useFetch<Country[]>(
-    "https://restcountries.com/v3/all"
+  const { data, isLoading, error } = useFetch<Pokemon>(
+    "https://pokeapi.co/api/v2/pokemon?limit=100"
   );
-  const [countries, setCountries] = useState<CountryData[]>([]);
+  const [characters, setCharacters] = useState<PokemonCharacter[]>([]);
 
-  const handleItemClick = (item: CountryData) => {
+  const handleItemClick = (item: PokemonCharacter) => {
     console.log(item);
   };
 
   useEffect(() => {
-    const countries: CountryData[] = [];
-    if (data && data.length) {
-      data.map((d) =>
-        countries.push({
-          name: d.name.common,
-          cca2: d.cca2,
-          official: d.name.official,
-          region: d.region
-        })
-      );
+    if (data) {
+      setCharacters(data.results);
     }
-    setCountries(countries);
   }, [data]);
 
   return (
     <div className="App">
       {error ? <div className="error">{JSON.stringify(error)}</div> : null}
-      <h1 className="welcome-text">RESTCountriesAPI Search</h1>
+      <h1 className="welcome-text">Pokemon API Filter</h1>
       <div className="container">
-        <Autocomplete<CountryData>
-          data={countries}
+        <Autocomplete<PokemonCharacter>
+          data={characters}
           loading={isLoading}
           setSelectedItem={handleItemClick}
           filterField="name"
         />
       </div>
       <p className="info">
-        Real data from <code>https://restcountries.com/v3/all</code>
+        Real data from{" "}
+        <a href="https://pokeapi.co/api/v2/pokemon?limit=100" target="_blank">
+          <code>https://pokeapi.co/api/v2/pokemon</code>
+        </a>
       </p>
     </div>
   );
