@@ -6,9 +6,9 @@ import {
   KeyboardEvent,
   FormEvent
 } from "react";
-import { useOnClickOutside } from "../../hooks/useOnclickOutside";
+import { useOnClickOutside } from "../hooks/useOnclickOutside";
 import ReactDOM from "react-dom";
-import "./index.css";
+import "./Autocomplete.css";
 
 type Props<T> = {
   data: T[];
