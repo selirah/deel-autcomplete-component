@@ -232,7 +232,7 @@ React Components can be prevented from re-rendering by using:
 
   The component **MyComponent** in the example given will re-render only if **prop1** or **prop2** changes.
 
-- `Lifecycle methods` - using a lifecycle method such as `shouldComponentUpdate` control when a component should re-render. A developer can write a custom logic inside this lifecycle method to only re-render a component based on certain conditions.
+- `Lifecycle methods` - using a lifecycle method such as `shouldComponentUpdate` to control when a component should re-render. A developer can write a custom logic inside this lifecycle method to only re-render a component based on certain conditions.
   <br>
   Example:
 
@@ -416,12 +416,12 @@ What's the difference in handling exceptions in promises, callbacks and async…
 - `Promises` - exceptions are handled using the `.catch()` method. They are able to "catch" errors that are "thrown" or rejected by the `.then()` method.
 
 ```
-  myPromiseFunction()
+  myPromiseFn()
     .then((result) => {
-      // Handle resolved Promise
+      // Resolved promise here
     })
     .catch((error) => {
-      // Handle rejected Promise
+      // Rejected promise here
     });
 
 ```
@@ -429,16 +429,16 @@ What's the difference in handling exceptions in promises, callbacks and async…
 - `Callbacks`, exceptions are handled as the first argument in the callback function.
 
 ```
-  function myCallbackFunction(callback) {
-    // Asynchronous operation
-    if (errorOccurred) {
-      callback(new Error('Error message'));
+  function myCallbackFn(callback) {
+    // Asynchronous operation here
+    if (error) {
+      callback(new Error('Error occured));
     } else {
-      callback(null, resultData);
+      callback(null, data);
     }
   }
 
-  myCallbackFunction((error, result) => {
+  myCallbackFn((error, result) => {
     if (error) {
       // Handle error
     } else {
@@ -448,15 +448,15 @@ What's the difference in handling exceptions in promises, callbacks and async…
 
 ```
 
-- `async...await`, exceptions are handled in a `try...catch` block. When an exception is thrown within the `async` function, it can be caught using a surrounding. `try...catch` block. This is achievable because the `await` keyword pauses the `async` execution until a Promise is resolved or rejected
+- `async...await` exceptions are handled in a `try...catch` block.
 
 ```
-  async function myAsyncFunction() {
+  async function myAsyncFn() {
     try {
-      const result = await myPromiseFunction();
-      // Handle resolved Promise
+      const result = await somePromiseFn();
+      // resolved Promise here
     } catch (error) {
-      // Handle rejected Promise or any other error
+      // rejected Promise here
     }
   }
 
@@ -500,13 +500,13 @@ List the steps needed to migrate a Class to Function Component.
 
 ## Answer
 
-- Remove lifecycle methods e.g. `componentDidMount` in the Class component and replace with hooks such as `useEffect`.
+- Remove lifecycle methods e.g. `componentDidMount` and replace with hooks such as `useEffect`.
 - Remove `constructor` in the Class component.
 - Replace `state` object with the `useState` hook.
 - Convert Class component methods to regular functions.
 - Remove the `this` reference.
 - Remove the `render()` method.
-- Test the new Function component to make sure everything works like the Class component.
+- Test the new Function component.
 
 ## Question 10
 
@@ -599,7 +599,7 @@ How to render an HTML string coming from the server.
 
 ## Answer
 
-Rendering HTML string that is received from a server can potentially lead to security vulnerabilities such as cross-site scripting (XSS) attacks and therefore needs to be done with caution. This can be achieved by:
+Rendering HTML string that is received from a server can be achieved by:
 
 - Making sure the HTML content comes from a trusted source and therefore safe.
 - Use the `dangerouslySetInnerHTML` prop to render the HTML string.
@@ -608,18 +608,12 @@ Rendering HTML string that is received from a server can potentially lead to sec
   import React from 'react';
 
   const MyComponent = () => {
-    // HTML string received from the server
+    // HTML string received from a trusted server
     const htmlString = '<p>This is an HTML string from the server.</p>';
 
-    // If you're sure the content is safe and trusted,
-    // use dangerouslySetInnerHTML
     return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
   };
 
   export default MyComponent;
 
 ```
-
-`dangerouslySetInnerHTML` should be used with caution as it poses security risks. HTML content should always be validated and sanitized when coming from a trusted source before using this approach.
-
-- Convert the HTML to React elements manually or using Markdown rendering libraries such as `react-markdown` or `marked` to provide control and safety against potential security risks.
