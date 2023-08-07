@@ -4,11 +4,11 @@ What is the difference between Component and PureComponent? Give an example wher
 
 ## Answer
 
-**Component** and **PureComponent** are both base classes that be extended to create custom components. The main difference between the two lies in their handling of updates and re-rendering.
+**Component** and **PureComponent** are both base classes that can be extended to create custom components. The main difference between the two lies in their handling of updates and re-rendering:
 
 In the case of a **Component**, when a custom component extends it, it will re-render whenever it's `state` or `props` change, irrespective of whether there has been a change in the actual values or not. This means updating the component's `state` with the same values will still trigger re-render.
 
-On the other hand, **PureComponent**, a subclass of **Component** performs what is known as **shallow comparison** of the it's **state** and **props** before making a decision on whether to re-render or not. If the `props` and `state` are the same (i.e., same references), the component will not re-render. PureComponent provides optimization behavior to prevent unnecessary re-renders in certain cases.
+On the other hand, **PureComponent**, a subclass of **Component**, performs what is known as **shallow comparison** of its **state** and **props** before making a decision on whether to re-render or not. If the `props` and `state` are the same (i.e., same references), the component will not re-render. PureComponent provides optimization behavior to prevent unnecessary re-renders in certain cases.
 
 Here is an example of how using PureComponent might break an app:
 
@@ -32,7 +32,8 @@ Here is an example of how using PureComponent might break an app:
 
     componentDidMount() {
       setInterval(() => {
-        // Since we are resuing the same state object, PureComponent will not re-render ExampleComponent
+        // Since we are resuing the same state object,
+        // PureComponent will not re-render ExampleComponent
         this.setState({ message: "Hello world" });
       }, 1000)
     }
@@ -44,9 +45,9 @@ Here is an example of how using PureComponent might break an app:
   }
 ```
 
-In the example above, **ExampleComponent** extends **PureComponent** and **App** renders **ExampleComponent** will the prop **message**. The **App** component uses **setInterval** to update it's state every second with the same **message** value ("Hello world") in the **setState** method. Since **PureComponent** performs a shallow comparison of **props**, it will not trigger re-render of **ExampleComponent** when **message** remains the same.
+In the example above, **ExampleComponent** extends **PureComponent** and **App** renders **ExampleComponent** with the prop `message`. The **App** component uses `setInterval` method to update its state every second with the same `message` value ("Hello world") in the `setState` method. Since **PureComponent** performs a shallow comparison of `props`, it will not trigger re-render of **ExampleComponent** when `message` remains the same.
 
-The issue comes from the fact that the **setInterval** updates the state, but **ExampleComponent** will never re-render because the **message** prop never changes it's reference, only its value. Using **PureComponent** in this case is not appropriate because we may want the **ExampleComponent** to re-render when **message** prop changes, regardless of its reference.
+The issue comes from the fact that the `setInterval` updates the `state`, but **ExampleComponent** will never re-render because the `message` prop never changes its reference, only its value. Using **PureComponent** in this case is not appropriate because we may want the **ExampleComponent** to re-render when the `message` prop changes, regardless of its reference.
 
 ## Question 2
 
@@ -54,11 +55,11 @@ Context + ShouldComponentUpdate might be dangerous. Why is that?
 
 ## Answer
 
-**shouldComponentUpdate** is a React lifecycle method that allows to manually control whether a component should re-render or not. It's used in optimization to prevent unnecessary re-renders.
+**shouldComponentUpdate** is a React lifecycle method that allows us to manually control whether a component should re-render or not. It is used in optimization to prevent unnecessary re-renders.
 
 **Context** provides a way to share data between components without the need for passing props down intermediate components.
 
-Using **Context** + **shouldComponentUpdate** can lead to unexpected issues related to a component's updates and re-rendering. Some of which include the following:
+Using **Context** + **shouldComponentUpdate** can lead to unexpected issues related to a component's updates and re-rendering. Some of which includes the following:
 
 - Using **shouldComponentUpdate** excessively can lead to complex logic, making code harder to maintain, understand and debug.
 - Using both **shouldComponentUpdate** and **Context** together can introduce additional dependenices and considerations on when a component should update, making the component more tightly coupled to the specific context, becoming a challenge in predicting how changes in the context will affect the components' behavior.
@@ -76,7 +77,7 @@ Describe 3 ways to pass _information_ from a component to its PARENT.
 
 Passing information from a child components to their parent can be achieved using either of the methods described below:
 
-- Using **Props** and **Callbacks** - this method involves passing a callback function from the parent component to the child component as a prop. The child component can invoke this callback function with the necessary data or information as argument. The parent can then receive this information and perform any neccessary actions.
+- Using **Props** and **Callbacks** - this method involves passing a callback function from the parent component to the child component as a prop. The child component can invoke this callback function with the necessary data or information as argument. The parent can then receive this information and use it for something else.
   <br>
   Example:
 
@@ -117,7 +118,7 @@ Passing information from a child components to their parent can be achieved usin
   }
 ```
 
-- Using React Context API - this methods involves creating a global state that can be accessed and modified by components at different levels of the component tree. The parent defines the context and provides a way for the child components to consume or make modifications using a **Provider** and **Consumer**.
+- Using **React Context API** - this method involves creating a global state that can be accessed and modified by components at different levels of the component tree. The parent defines the context and provides a way for the child components to consume or make modifications using a **Provider** and **Consumer**.
   <br>
   Example
   <br>
@@ -160,7 +161,7 @@ Passing information from a child components to their parent can be achieved usin
   }
 ```
 
-- Using State Management Libraries - such as Redux, Mobx, etc. allows to manage global application state independently of component hierarchy. Actions can be dispatched from child components and handle them in reducers, updating the store. The parent component subscribes to the changes in the store and reacts to updates as needed.
+- Using **State Management Libraries** - such as Redux, Mobx, etc. allows to manage global application state independently of component hierarchy. Actions can be dispatched from child components and handle them in reducers, updating the store. The parent component subscribes to the changes in the store and reacts to updates as needed.
   <br>
   Example
   <br>
@@ -302,11 +303,11 @@ Example where using Fragments can break an app:
 import React from 'react';
 
 const MyComponent = () => {
-  const condition = true;
+  const showTitle = true;
 
   return (
     <>
-      {condition && <h1>Title</h1>}
+      {showTitle && <h1>Title</h1>}
       <p>Paragraph 1</p>
       <p>Paragraph 2</p>
     </>
@@ -315,7 +316,7 @@ const MyComponent = () => {
 
 ```
 
-In the example above, the `<h1>` element will be rendered because `condition*` is set to true. However, because the `<h1>` element is not wrapped in a parent element, rendering it just like that could lead to invalid HTML structure. If `condition`, there will not be any problem since no element will be rendered.
+In the example above, the `<h1>` element will be rendered because `showTitle` is set to true. However, because the `<h1>` element is not wrapped in a parent element, rendering it just like that could lead to invalid HTML structure. If `showTitle` is false, there will not be any problem since no element will be rendered.
 
 Solving this issue can be done by always making sure that conditionally rendered elements are wrapped in a parent element before using fragments to maintain the HTML structure.
 <br>
@@ -348,7 +349,7 @@ Give 3 examples of the HOC pattern.
 
 ## Answer
 
-Higher-Order Components (HOCs) are functions that takes a component as an arguments and return an enhanced version of that component. They are design pattern in React used to extend the functionality of a component by wrapping it with another component.
+Higher-Order Components (HOCs) are functions that takes a component as an argument and return an enhanced version of that component. They are design pattern in React used to extend the functionality of a component by wrapping it with another component.
 <br>
 Examples of HOC pattern used in React:
 
@@ -473,7 +474,7 @@ Exceptions are handled differently in terms of behavior and syntax when using `P
 
 ```
 
-- In `Callbacks`, exceptions are handled as the first argument in the callback function.This argument is reserved for the error, and the subsequent arguments contains the results. This pattern complex and challenging to manage when multiple asynchronous operations are involved.
+- In `Callbacks`, exceptions are handled as the first argument in the callback function.This argument is reserved for the error, and the subsequent arguments contains the results. This pattern is complex and challenging to manage when multiple asynchronous operations are involved.
 
 ```
   function myCallbackFunction(callback) {
@@ -495,7 +496,7 @@ Exceptions are handled differently in terms of behavior and syntax when using `P
 
 ```
 
-- In `async...await`, exceptions are handled in a `try...catch` block. When an exception is thrown within the `async` function, it can be caught using a surrounding `try...catch` block. The `await` keyword pauses the execution of the `async` function until the promise is resolved or rejceted.
+- In `async...await`, exceptions are handled in a `try...catch` block. When an exception is thrown within the `async` function, it can be caught using a surrounding `try...catch` block. The `await` keyword pauses the execution of the `async` function until the promise is resolved or rejceted. This method provides more cleaner way to handle asynchronous code.
 
 ```
   async function myAsyncFunction() {
@@ -515,9 +516,9 @@ How many arguments does setState take and why is it async.
 
 ## Answer
 
-The `setState` method in React is used to update the state of a component, and it takes two arguments: an **object** or a **function** and an optional **callback function**.
+The `setState` method in React is used to update the state of a component, and it takes two arguments: an **object** or a **function** and an optional **callback** function.
 
-The `object` argument has keys with represents the state properties needed to be updated, and the values represents the new values for those properties.
+The `object` argument has keys which represents the state properties needed to be updated, and the values represents the new values for those properties.
 
 ```
 this.setState({ key1: value1, key2: value2 });
@@ -541,7 +542,7 @@ this.setState({ key1: value1 }, () => {
 
 ```
 
-React `setState` method is asynchronous for performance reasons. When the `setState` method is called, state are not updated, and component re-render trigger and not done immediately. Instead, it batches the updates and performs a single re-render with all the accumulated updates at the end of the current event loop. This means React reduces the number of times it needs to re-render the component to improve performance.
+React `setState` method is asynchronous for performance reasons. When the `setState` method is called, state is not updated, and component re-render trigger is not done immediately. Instead, it batches the updates and performs a single re-render with all the accumulated updates at the end of the current event loop. This means React reduces the number of times it needs to re-render the component to improve performance.
 
 ## Question 9
 
@@ -558,7 +559,7 @@ Migrating from a Class component to a Function component in React involves the f
 - Remove the `this` reference since there is no instance of a class.
 - Remove the `render()` method.
 - Address differences in lifecycle methods (if necessary) - use its equivalent hooks (`useEffect`, `useLayoutEffect`, etc).
-- Test the Function component to make sure works and behaves similar to the Class component.
+- Test the Function component to make sure everything works and behaves similar to the Class component.
 
 ## Question 10
 
@@ -605,21 +606,21 @@ There are several ways to use styles in components. The following are some commo
 
 ```
 
-- Styled Components (CSS-in-JS) - popular library that allows to write CSS directly inside JavaScript code. It uses tagged template literals to define styles for components. Other libraries include Emotion, Radium.
+- **Styled Components (CSS-in-JS)** - popular library that allows to write CSS directly inside JavaScript code. It uses tagged template literals to define styles for components. Other libraries include Emotion, Radium.
 
 ```
-import React from 'react';
-import styled from 'styled-components';
+  import React from 'react';
+  import styled from 'styled-components';
 
-const StyledDiv = styled.div`
-  color: blue;
-  font-size: 16px;
-  font-weight: bold;
-`;
+  const StyledDiv = styled.div`
+    color: blue;
+    font-size: 16px;
+    font-weight: bold;
+  `;
 
-const MyComponent = () => {
-  return <StyledDiv>Styled component with Styled Components</StyledDiv>;
-};
+  const MyComponent = () => {
+    return <StyledDiv>Styled component with Styled Components</StyledDiv>;
+  };
 
 ```
 
@@ -652,7 +653,7 @@ How to render an HTML string coming from the server.
 
 ## Answer
 
-Rendering HTML string that is received from a server can potentially lead to security vulnerabilities such as cross-site scripting (XSS) attcks and therefore needs to be done with caution. This can be achieved by:
+Rendering HTML string that is received from a server can potentially lead to security vulnerabilities such as cross-site scripting (XSS) attacks and therefore needs to be done with caution. This can be achieved by:
 
 - Making sure the HTML content comes from a trusted source and therefore safe.
 - Use the `dangerouslySetInnerHTML` prop to render the HTML string.
@@ -664,7 +665,8 @@ Rendering HTML string that is received from a server can potentially lead to sec
     // HTML string received from the server
     const htmlString = '<p>This is an HTML string from the server.</p>';
 
-    // If you're sure the content is safe and trusted, use dangerouslySetInnerHTML
+    // If you're sure the content is safe and trusted,
+    // use dangerouslySetInnerHTML
     return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
   };
 
@@ -672,6 +674,6 @@ Rendering HTML string that is received from a server can potentially lead to sec
 
 ```
 
-`dangerouslySetInnerHTML` should be used with caution as it poses security risks. HTML content should always be validated and sanitized and coming from a trusted source before using this approach.
+`dangerouslySetInnerHTML` should be used with caution as it poses security risks. HTML content should always be validated and sanitized when coming from a trusted source before using this approach.
 
 - Convert the HTML to React elements manually or using Markdown rendering libraries such as `react-markdown` or `marked` to provide control and safety against potential security risks.
