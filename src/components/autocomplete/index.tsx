@@ -53,24 +53,49 @@ const Autocomplete = <T extends object>({
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeSuggestion, setActiveSuggestion] = useState(0);
 
+  /**
+   * Asynchronous function to filter data
+   * simulate an asynchronous opearation
+   * just like performing the filtering on a server
+   * set the debounce time to 1 second
+   * to allow user type in more characters
+   * useful when performing server filtering
+   * to prevent multiple needless server requests.
+   */
+  const filterDataAsync = (filterValue: string): Promise<T[]> => {
+    return new Promise<T[]>((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          const filteredData = data.filter((item: T) => {
+            const fieldValue = item[filterField] as string;
+            return fieldValue.toLowerCase().includes(filterValue.toLowerCase());
+          });
+          resolve(filteredData);
+        } catch (error) {
+          reject(error);
+        }
+      }, 1000);
+    });
+  };
+
   // On change event to handle data filtering
   // using the input from the user.
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     setValue(input);
     setActiveSuggestion(0);
-    if (input === "") {
+    if (!input) {
       setShowSuggestions(false);
       return;
     }
-    setTimeout(() => {
-      const filtered = data.filter((item: T) => {
-        const fieldValue = item[filterField] as string;
-        return fieldValue.toLowerCase().includes(input.toLowerCase());
+    filterDataAsync(input)
+      .then((data) => {
+        setShowSuggestions(true);
+        setSuggestions(data);
+      })
+      .catch((error) => {
+        throw Error(error);
       });
-      setShowSuggestions(true);
-      setSuggestions(filtered);
-    }, 1000);
   };
 
   // Input keydown event
@@ -151,7 +176,7 @@ const Autocomplete = <T extends object>({
     <div className="autocomplete-wrapper" ref={containerRef}>
       <input
         ref={inputRef}
-        placeholder="Type to search . . ."
+        placeholder="Type to filter . . ."
         value={value}
         onChange={handleOnChange}
         className="filter-wrapper"
