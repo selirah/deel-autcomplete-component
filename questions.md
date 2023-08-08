@@ -6,48 +6,101 @@ What is the difference between Component and PureComponent? Give an example wher
 
 A **Component** will always trigger a re-render even when the values of `state` or `props` have been updated with the same values.
 
-**PureComponent** does not not re-render when the value of `props` and `state` has been updated with the same values by performing **shallow comparison** of its state and props. They can be used in optimization to prevent unnecessary re-rendering of components.
+**PureComponent** does not re-render when the value of `props` and `state` has been updated with the same values by performing **shallow comparison** of its state and props. They can be used in optimization to prevent unnecessary re-rendering of components.
 
-PureComponent can break an app when it is used in complex data structure. An example is given below:
+Here is an instance where using a **Component** in a wrong way can break an app: consider the code snippet below:
 
 ```
-  import React, { Component, PureComponent } from 'react';
+import React, { useState } from 'react'
 
-  class ExampleComponent extends PureComponent {
-    render() {
-      console.log('Rendering ExampleComponent');
-      return <div>{this.props.message}</div>
+const ItemComponent = ({ item, onToggleItem }) => {
+
+  // code to re-render component on every prop change
+  console.log("Re-render this component")
+
+  return (
+    <div className="item-styling">
+      <p>{item.name}</p>
+      <p>{item.isSold ? "Sold" : "Available"}</p>
+      <button onClick={() => onToggleItem(item.id)}>Sell/Unsell</button>
+    </div>
+  )
+}
+
+const App = () => {
+  const [items, setItems] = useState([
+    { id: 1, name: "Item 1", isSold: false},
+    { id: 2, name: "Item 2", isSold: false}
+    ]);
+
+    const onToggleItem = (id) => {
+      setItems((prevItems) => prevItems.map((item) => item.id === id ?
+      { ...item, isSold: !item.isSold } : item));
     }
-  }
 
-  class App extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        message: "Hello world"
-      }
-    }
+    return (
+      <div>
+        <h1>List of Items</h1>
+        {
+          items.map((item) => (
+            <ItemComponent key={item.id} item={item} onToggleItem={onToggleItem} />
+          ))
+        }
+      </div>
+    )
+}
 
-    componentDidMount() {
-      setInterval(() => {
-        // Since we are resuing the same state object,
-        // PureComponent will not re-render ExampleComponent
-        this.setState({ message: "Hello world" });
-      }, 1000)
-    }
-
-    render() {
-      console.log("Rendering App");
-      return <ExampleComponent message={this.state.message} />;
-    }
-  }
-
-  export default App;
+export default App;
 ```
 
-In the example above, **ExampleComponent** extends **PureComponent** and **App** renders **ExampleComponent** with the prop `message`. The **App** component uses `setInterval` method to update the state every second with the same `message` value ("Hello world"). Since **PureComponent** performs a shallow comparison of `props`, it will not trigger re-render of **ExampleComponent** when `message` remains the same.
+In the example, when a user clicks on the `Sell/Unsell` button of an item, it calls the `onToggleItem` function in the parent component to update the `isSold` property of that particular item in the list. Now, if the `ItemComponent` is designed to re-render on receiving new props, anytime the state of `App` changes using the `onToggleItem` function, it will trigger a re-render of all the `ItemComponent` even if their data remains the same causing performance issues.
 
-The issue comes from the fact that the `setInterval` updates the `state`, but **ExampleComponent** will never re-render because the `message` prop never changes its reference, only its value. Using **PureComponent** in this case is not appropriate because we may want the **ExampleComponent** to re-render when the `message` prop changes, regardless of its reference.
+Here is an instance where using a **Pure Component** in a wrong way can break an app: consider the code snippet below:
+
+```
+import React, { useState } from 'react'
+
+const ItemComponent = React.memo({ item, onToggleItem }) => {
+
+  // code to re-render component on every prop change
+  console.log(`Item ${item.name} re-rendered`)
+
+  return (
+    <div className="item-styling">
+      <p>{item.name}</p>
+      <p>{item.isSold ? "Sold" : "Available"}</p>
+      <button onClick={() => onToggleItem(item.id)}>Sell/Unsell</button>
+    </div>
+  )
+}
+
+const App = () => {
+  const [items, setItems] = useState([
+    { id: 1, name: "Item 1", isSold: false},
+    { id: 2, name: "Item 2", isSold: false}
+    ]);
+
+    const onToggleItem = (id) => {
+      setItems((prevItems) => prevItems.map((item) => item.id === id ?
+      { ...item, isSold: !item.isSold } : item));
+    }
+
+    return (
+      <div>
+        <h1>List of Items</h1>
+        {
+          items.map((item) => (
+            <ItemComponent key={item.id} item={item} onToggleItem={onToggleItem} />
+          ))
+        }
+      </div>
+    )
+}
+
+export default App;
+```
+
+In the example, `ItemComponent` is a pure component using the `React.memo` HOC to surround it. This memoizes the component's props to prevent unnecessary re-renders when the props are not changed. The issue comes in when an item property is toggled using the `onToggleItem` function to change the `isSold` property of the item. Because pure components does shallow comparison of the props,it will not re-render even though it has changed since `isSold` property is found inside an object `item`. In effect, the property value is changed all right, but it won't reflect on the UI.
 
 ## Question 2
 
@@ -59,14 +112,12 @@ Context + ShouldComponentUpdate might be dangerous. Why is that?
 
 **Context** provides the ability to share data across components without using props.
 
-Using **Context** and **shouldComponentUpdate** can cause completed issues related to how a component re-renders and update states. Here are some dangers of using Context API and shouldComponentUpdate lifecycle method:
+Using **Context** and **shouldComponentUpdate** can cause complicated issues related to how a component re-renders and update states. Here are some examples:
 
 - Excessive use of `shouldComponentUpdate` can lead to complicated and incorrect code such as components not updating when they should and vice versa.
 - A change in data structure of components can cause unnecessary re-rendering since `shouldComponentUpdate` depends on the values of certain state and props and therefore needs to be factored in when writing the logic.
-- It can also increase the code complexity when using `shouldComponentUpdate` because of complex logic making it difficult to maintain
 - Excessive use of `Context` can make it difficult to understand to flow of data across components leading to complex code logic.
 - Unnecessary re-rendering of components when a value changes in `Context`. It can trigger all components that are connected to it to re-render.
-- Tracking data flow becomes difficult as the application grows when using `Context`, making it difficult to maintain.
 
 ## Question 3
 
