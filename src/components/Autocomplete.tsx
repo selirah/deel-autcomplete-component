@@ -131,7 +131,7 @@ const Autocomplete = <T extends object>({
       // User pressed the Escape key
       setShowSuggestions(false);
       setValue("");
-    } else if (e.key === "Enter" && value !== "") {
+    } else if (e.key === "Enter" && value !== "" && suggestions.length > 0) {
       // User pressed the Enter key
       setShowSuggestions(false);
       setValue(suggestions[activeSuggestion][filterKey]);
