@@ -264,7 +264,7 @@ Give 2 ways to prevent components from re-rendering.
 
 React Components can be prevented from re-rendering by using:
 
-- `Memoization` - using a higher-order component (HOC) such as `React.memo` to memoize a component's state and props, preventing it from unnecessary re-renders when there hasn't been any change in the component's state or props. The `useMemo` hook also memoizes the result from a function computation and returns the memoized value if the dependencies to the function remains the same (using Referential equality).
+- `Memoization` - using a higher-order component (HOC) such as `React.memo` to memoize a component's state and props, preventing it from unnecessary re-renders when there hasn't been any change in the component's state or props. The `useMemo` hook also memoizes the result from a function computation and returns the memoized value if the dependencies to the function remains the same.
   <br>
   Example:
 
@@ -357,7 +357,7 @@ const MyComponent = () => {
 
 ```
 
-In this example, both `<h1>` and `<p>` are sibling elements. If a developer decides to style both with say a margin, it will lead to an unexpected result because there is no enclosing element around them. The styling can only take effect if the developer encloses the elements with a `<div>` or its equivalent sibling.
+In this example, both `<h1>` and `<p>` are siblings. If a developer decides to add a `margin` around them in css, it will lead to an unexpected result because there is no enclosing element around them. The styling can only take effect if the developer encloses the elements with a `<div>` or its equivalent sibling.
 
 ## Question 6
 
@@ -365,9 +365,7 @@ Give 3 examples of the HOC pattern.
 
 ## Answer
 
-Higher-Order Components (HOCs) are functions that takes a component as an argument and return an enhanced version of that component. They are design pattern in React used to extend the functionality of a component by wrapping it with another component.
-
-Higher-Order Components (HOCs) are functions that receives another component as an argument and return an updated version of that component.
+Higher-Order Components (HOCs) are functions that receives another component as an argument and returns an updated version of that component.
 <br>
 Examples of HOC pattern used in React:
 
@@ -464,7 +462,7 @@ What's the difference in handling exceptions in promises, callbacks and async…
 
 ## Answer
 
-- `Promises` - exceptions are handled using the `.catch()` method. They are able to "catch" errors that are "thrown" or rejected by the `.then()` method.
+- `Promises` exceptions are handled using the `.catch()` method. They are able to "catch" errors that are "thrown" or rejected by the `.then()` method.
 
 ```
   myPromiseFn()
@@ -477,7 +475,7 @@ What's the difference in handling exceptions in promises, callbacks and async…
 
 ```
 
-- `Callbacks`, exceptions are handled as the first argument in the callback function.
+- `Callbacks` exceptions are handled as the first argument in the callback function.
 
 ```
   function myCallbackFn(callback) {
@@ -543,7 +541,7 @@ The `setState` method in React is used to update the state of a component, and i
 
 ```
 
-The `setState` is async because it does not immediately update states and trigger re-rendering of component. It rather stores up all updates in batches and performs a single re-render to improve performance.
+The `setState` is async because it does not immediately update states and trigger re-rendering of components. It rather stores up all updates in batches and performs a single re-render to improve performance.
 
 ## Question 9
 
@@ -551,6 +549,7 @@ List the steps needed to migrate a Class to Function Component.
 
 ## Answer
 
+- Remove the `class` keyword and the base class that it extends i.e. `Component`
 - Remove lifecycle methods e.g. `componentDidMount` and replace with hooks such as `useEffect`.
 - Remove `constructor` in the Class component.
 - Replace `state` object with the `useState` hook.
@@ -660,7 +659,7 @@ Rendering HTML string that is received from a server can be achieved by:
 
   const MyComponent = () => {
     // HTML string received from a trusted server
-    const htmlString = '<p>This is an HTML string from the server.</p>';
+    const htmlString = '<p>HTML string received from a trusted source</p>';
 
     return <div dangerouslySetInnerHTML={{ __html: htmlString }} />;
   };
