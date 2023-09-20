@@ -134,19 +134,19 @@ const Autocomplete = <T extends object>({
     } else if (e.key === "Enter" && value !== "" && suggestions.length > 0) {
       // User pressed the Enter key
       setShowSuggestions(false);
-      setValue(suggestions[activeSuggestion][filterKey]);
+      setValue(suggestions[activeSuggestion][filterKey] as string);
       setSelectedItem && setSelectedItem(suggestions[activeSuggestion]);
     } else {
       return;
     }
   };
 
-  // When a user selects a country,
-  // set the value to the selected country
+  // When a user selects a character,
+  // set the value to the selected character
   // and close the suggestion container
   const onSetSuggestion = (item: T) => {
     setShowSuggestions(false);
-    setValue(item[filterKey]);
+    setValue(item[filterKey] as string);
     setSelectedItem && setSelectedItem(item);
   };
 
@@ -189,7 +189,7 @@ const Autocomplete = <T extends object>({
           {suggestions && suggestions.length ? (
             suggestions.map((suggestion) => (
               <li
-                key={suggestion[filterKey]}
+                key={suggestion[filterKey] as string}
                 className={`filter-item ${
                   suggestions.indexOf(suggestion) === activeSuggestion
                     ? "active"
@@ -201,7 +201,7 @@ const Autocomplete = <T extends object>({
                 onClick={() => onSetSuggestion(suggestion)}
               >
                 <HighlightSearchValue
-                  value={suggestion[filterKey]}
+                  value={suggestion[filterKey] as string}
                   searchValue={value}
                 />
               </li>

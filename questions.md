@@ -116,7 +116,7 @@ Using **Context** and **shouldComponentUpdate** can cause complicated issues rel
 
 - Excessive use of `shouldComponentUpdate` can lead to complicated and incorrect code such as components not updating when they should and vice versa.
 - A change in data structure of components can cause unnecessary re-rendering since `shouldComponentUpdate` depends on the values of certain state and props and therefore needs to be factored in when writing the logic.
-- Excessive use of `Context` can make it difficult to understand to flow of data across components leading to complex code logic.
+- Excessive use of `Context` can make it difficult to understand the flow of data across components leading to complex code logic.
 - Unnecessary re-rendering of components when a value changes in `Context`. It can trigger all components that are connected to it to re-render.
 
 ## Question 3
